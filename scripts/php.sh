@@ -29,11 +29,20 @@ if [[ $HHVM == "true" ]]; then
 
     sudo service hhvm restart
 else
+    sudo apt -y install software-properties-common dirmngr apt-transport-https lsb-release ca-certificates
+
+    sudo LC_ALL=C.UTF-8 add-apt-repository ppa:ondrej/php
     sudo add-apt-repository -y ppa:ondrej/php
     sudo apt-key update
     sudo apt-get update
-    
-    sudo apt-get install -qq php7.3 php7.3-cli php7.3-fpm php7.3-mysql php7.3-pgsql php7.3-sqlite php7.3-curl php7.3-gd php7.3-intl php7.3-mbstring php7.3-xml php7.3-mcrypt
+    deb http://ppa.launchpad.net/ondrej/php/ubuntu bionic main
+    deb-src http://ppa.launchpad.net/ondrej/php/ubuntu bionic main
+
+    sudo apt-get update
+
+    sudo apt install php7.3-cli php7.3-fpm php7.3-common php7.3-json php7.3-pdo php7.3-mysql php7.3-sqlite php7.3-zip php7.3-gd php7.3-mbstring php7.3-curl php7.3-xml php7.3-bcmath php7.3-json php7.3-imagick php7.3-ctype php7.3-fileinfo php7.3-openssl php7.3-pdo_mysql php7.3-pdo_sqlite php7.3-bz2 php7.3-intl php7.3-tokenizer php7.3-xml php7.3-xmlrpc php7.3-dev php7.3-opcache php7.3-soap
+
+    sudo apt policy php7.3-cli
 
     # Set PHP FPM to listen on TCP instead of Socket
     sudo sed -i "s/listen =.*/listen = 127.0.0.1:9000/" /etc/php/7.3/fpm/pool.d/www.conf
@@ -49,6 +58,9 @@ else
     sudo sed -i "s/listen\.owner.*/listen.owner = vagrant/" /etc/php/7.3/fpm/pool.d/www.conf
     sudo sed -i "s/listen\.group.*/listen.group = vagrant/" /etc/php/7.3/fpm/pool.d/www.conf
     sudo sed -i "s/listen\.mode.*/listen.mode = 0666/" /etc/php/7.3/fpm/pool.d/www.conf
+
+    # Nginx
+    sudo systemctl restart nginx
 
     sudo service php7.3-fpm restart
 fi
