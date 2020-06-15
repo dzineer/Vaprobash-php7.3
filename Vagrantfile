@@ -42,7 +42,7 @@ mongo_enable_remote   = "false"  # remote access enabled when true
 
 # Languages and Packages
 php_timezone          = "UTC"    # http://php.net/manual/en/timezones.php
-php_version           = "7.0"    # Options: 7.0
+php_version           = "7.3"    # Options: 7.3
 ruby_version          = "latest" # Choose what ruby version should be installed (will also be the default version)
 ruby_gems             = [        # List any Ruby Gems that you want to install
   #"jekyll",
@@ -206,6 +206,9 @@ Vagrant.configure("2") do |config|
 
   # Provision Vim
   # config.vm.provision "shell", path: "#{github_url}/scripts/vim.sh", args: github_url
+
+  # Install Git
+  # config.vm.provision "shell", path: "#{github_url}/scripts/git.sh"
 
   # Provision Docker
   # config.vm.provision "shell", path: "#{github_url}/scripts/docker.sh", args: "permissions"
