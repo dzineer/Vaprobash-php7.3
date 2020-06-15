@@ -90,7 +90,7 @@ sphinxsearch_version  = "rel22" # rel20, rel21, rel22, beta, daily, stable
 Vagrant.configure("2") do |config|
 
   # Set server to Ubuntu 14.04
-  config.vm.box = "ubuntu/trusty64"
+  config.vm.box = "hashicorp/bionic64"
 
   config.vm.define "Vaprobash" do |vapro|
   end
@@ -153,7 +153,8 @@ Vagrant.configure("2") do |config|
 
   # If using VMWare Fusion
   config.vm.provider "vmware_fusion" do |vb, override|
-    override.vm.box_url = "https://vagrantcloud.com/hashicorp/boxes/precise64/versions/1.1.0/providers/vmware_fusion.box"
+    override.vm.box = "hashicorp/bionic64"
+    override.vm.box_version = "1.0.282"
 
     # Set server memory
     vb.vmx["memsize"] = server_memory
