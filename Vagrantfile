@@ -232,9 +232,10 @@ Vagrant.configure("2") do |config|
   # Databases
   ##########
 
-  print "Enter the database to create: "
-  database_name = STDIN.gets.chomp
-  print "\n"
+  # print "Enter the database to create: "
+  # database_name = STDIN.gets.chomp
+  # print "\n"
+  database_name = "laravel"
 
   print "database name: #{database_name}\n"
   print "database user: #{mysql_user}\n"

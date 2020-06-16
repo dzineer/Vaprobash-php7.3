@@ -72,6 +72,9 @@ else
     cd -
 fi
 
+# sudo sed -i "s/DB_DATABASE=laravel/DB_DATABASE=$5/" "$laravel_root_folder/.env"
+# sudo sed -i "s/DB_PASSWORD=/DB_PASSWORD=$6/" "$laravel_root_folder/.env"
+
 if [[ $NGINX_IS_INSTALLED -eq 0 ]]; then
     # Change default vhost created
     sudo sed -i "s@root /vagrant@root $laravel_public_folder@" /etc/nginx/sites-available/vagrant
@@ -84,9 +87,6 @@ if [[ $APACHE_IS_INSTALLED -eq 0 ]]; then
     # Change ProxyPassMatch fcgi path
     # Change <Directory ...> path
     sudo sed -i "s@$3@$laravel_public_folder@" /etc/apache2/sites-available/$1.xip.io.conf
-
-    sudo sed -i "s/DB_DATABASE=laravel/DB_DATABASE=$5/" "$laravel_root_folder/.env"
-    sudo sed -i "s/DB_PASSWORD=/DB_DATABASE=$6/" "$laravel_root_folder/.env"
 
     sudo service apache2 reload
 fi
