@@ -25,13 +25,13 @@ sudo apt-get update
 # -qq implies -y --force-yes
 sudo apt-get install -qq curl unzip git-core ack-grep software-properties-common build-essential cachefilesd
 
-sudo dd if=/dev/urandom of=/home/vagrant/.rnd bs=256 count=1
-
 echo ">>> Installing *.xip.io self-signed SSL"
 
 SSL_DIR="/etc/ssl/xip.io"
 DOMAIN="*.xip.io"
 PASSPHRASE="vaprobash"
+
+EMAIL="support@xip.io"
 
 SUBJ="
 C=US
@@ -39,8 +39,8 @@ ST=Connecticut
 O=Vaprobash
 localityName=New Haven
 commonName=$DOMAIN
-organizationalUnitName=
-emailAddress=
+organizationalUnitName=IT
+emailAddress=support@vaprobash.test
 "
 
 sudo mkdir -p "$SSL_DIR"
@@ -49,7 +49,8 @@ sudo mkdir -p "$SSL_DIR"
 #sudo openssl req -new -subj "$(echo -n "$SUBJ" | tr "\n" "/")" -key "$SSL_DIR/xip.io.key" -out "$SSL_DIR/xip.io.csr" -passin pass:$PASSPHRASE
 #sudo openssl x509 -req -days 365 -in "$SSL_DIR/xip.io.csr" -signkey "$SSL_DIR/xip.io.key" -out "$SSL_DIR/xip.io.crt"
 
-sudo openssl req -subj "$(echo -n "$SUBJ" | tr "\n" "/")" -x509 -nodes -days 730 -newkey rsa:2048 -keyout "$SSL_DIR/xip.io.key" -out "$SSL_DIR/xip.io.crt"
+sudo openssl req -subj "/ON=personal/CN=$DOMAIN/" -x509 -nodes -days 730 -newkey rsa:2048 -keyout "$SSL_DIR/xip.io.key" -out "$SSL_DIR/xip.io.crt"
+
 
 # Setting up Swap
 
