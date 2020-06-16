@@ -22,6 +22,7 @@ sudo apt-get update
 # -qq implies -y --force-yes
 sudo apt-get install -qq curl unzip git-core ack-grep software-properties-common build-essential cachefilesd
 
+sudo dd if=/dev/urandom of=/home/vagrant/.rnd bs=256 count=1
 
 echo ">>> Installing *.xip.io self-signed SSL"
 
