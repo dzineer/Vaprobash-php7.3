@@ -73,7 +73,7 @@ EOF
 
 # Nginx Server Block config for HHVM (without using SSL)
 read -d '' PHP_NO_SSL <<EOF
-        # pass the PHP scripts to php7.0-fpm
+        # pass the PHP scripts to php7.3-fpm
         location ~ \.(hh|php)$ {
             try_files \$uri =404;
             fastcgi_keep_conn on;
@@ -90,7 +90,7 @@ EOF
 
 # Nginx Server Block config for HHVM (with SSL)
 read -d '' PHP_WITH_SSL <<EOF
-        # pass the PHP scripts to php7.0-fpm
+        # pass the PHP scripts to php7.3-fpm
         location ~ \.(hh|php)$ {
             try_files \$uri =404;
             fastcgi_keep_conn on;
