@@ -360,5 +360,11 @@ Vagrant.configure("2") do |config|
   # Add these to the same directory as the Vagrantfile.
   ##########
   # config.vm.provision "shell", path: "./local-script.sh"
+  
+  ####
+  # Copy any files that you want to have avaiable on your vm
+  #
+  config.vm.synced_folder "scripts/" "/etc/installation/scripts/", type: "rsync"
+  config.vm.synced_folder "helpers/" "/etc/installation/helpers/", type: "rsync"
 
 end
