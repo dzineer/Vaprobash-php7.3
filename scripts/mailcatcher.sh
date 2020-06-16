@@ -12,7 +12,7 @@ APACHE_IS_INSTALLED=$?
 
 # Installing dependency
 # -qq implies -y --force-yes
-sudo apt-get install -qq libsqlite3-dev ruby1.9.1-dev
+sudo apt-get install -qq libsqlite3-dev ruby2.5 ruby2.5-dev
 
 if $(which rvm) -v > /dev/null 2>&1; then
 	echo ">>>>Installing with RVM"
@@ -43,9 +43,9 @@ sudo service mailcatcher start
 
 if [[ $PHP_IS_INSTALLED -eq 0 ]]; then
 	# Make php use it to send mail
-    echo "sendmail_path = /usr/bin/env $(which catchmail)" | sudo tee /etc/php/7.0/mods-available/mailcatcher.ini
+    echo "sendmail_path = /usr/bin/env $(which catchmail)" | sudo tee /etc/php/7.333/mods-available/mailcatcher.ini
 	sudo phpenmod mailcatcher
-	sudo service php7.0-fpm restart
+	sudo service php7.3-fpm restart
 fi
 
 if [[ $APACHE_IS_INSTALLED -eq 0 ]]; then

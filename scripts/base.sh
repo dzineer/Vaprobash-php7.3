@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+export DEBIAN_FRONTEND=noninteractive
+
 sudo dd if=/dev/urandom of=/root/.rnd bs=256 count=1
 sudo dd if=/dev/urandom of=/home/vagrant/.rnd bs=256 count=1
 
