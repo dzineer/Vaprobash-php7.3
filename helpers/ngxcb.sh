@@ -51,7 +51,7 @@ read -d '' PHP_NO_SSL <<EOF
           fastcgi_pass unix:/var/run/php/php7.3-fpm.sock;
           fastcgi_index index.php;
           include fastcgi_params;
-  	  fastcgi_param  SCRIPT_FILENAME  $document_root$fastcgi_script_name;	
+  	  fastcgi_param  SCRIPT_FILENAME  \$document_root\$fastcgi_script_name;	
         }
 EOF
 
@@ -64,7 +64,7 @@ read -d '' PHP_WITH_SSL <<EOF
           fastcgi_pass unix:/var/run/php/php7.3-fpm.sock;
           fastcgi_index index.php;
           include fastcgi_params;
-   	  fastcgi_param  SCRIPT_FILENAME  $document_root$fastcgi_script_name;
+   	  fastcgi_param  SCRIPT_FILENAME  \$document_root\$fastcgi_script_name;
         }
 EOF
     fi
@@ -195,6 +195,7 @@ cat <<EOF
        # }
     # }
 EOF
+}
 
 # Check if there are enough arguments provided (2 arguments and there 2 values)
 if [[ $# -lt 4 ]]; then
