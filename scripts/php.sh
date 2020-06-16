@@ -37,12 +37,12 @@ else
     sudo apt install -qq php7.3-common php7.3-fpm php7.3-mysql php7.3-sqlite php7.3-xml php7.3-xmlrpc php7.3-curl php7.3-gd php7.3-imagick php7.3-cli php7.3-dev php7.3-imap php7.3-mbstring php7.3-opcache php7.3-soap php7.3-zip php7.3-intl php7.3-bcmath -y
 
     # Set PHP FPM to listen on TCP instead of Socket
-    sudo sed -i "s/listen =.*/listen = 127.0.0.1:9000/" /etc/php/7.3/fpm/pool.d/www.conf
+    sudo sed -i "s/listen =.*/listen = 127.3.0.1:9000/" /etc/php/7.3/fpm/pool.d/www.conf
 
     # Set PHP FPM allowed clients IP address
     sudo sed -i "s/;listen.allowed_clients/listen.allowed_clients/" /etc/php/7.3/fpm/pool.d/www.conf
 
-    # Set run-as user for PHP/7.0-FPM processes to user/group "vagrant"
+    # Set run-as user for PHP/7.3-FPM processes to user/group "vagrant"
     # to avoid permission errors from apps writing to files
     sudo sed -i "s/user = www-data/user = vagrant/" /etc/php/7.3/fpm/pool.d/www.conf
     sudo sed -i "s/group = www-data/group = vagrant/" /etc/php/7.3/fpm/pool.d/www.conf
