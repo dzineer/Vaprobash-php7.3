@@ -1,18 +1,42 @@
 #!/usr/bin/env bash
 
-export DEBIAN_FRONTEND=noninteractive
+export COMMAND_LOG="/scripts/commands.log"
+export COMMAND_AND_OUTPUT_LOG="/scripts/commands-with-output.log"
+export ENV_LOG="/scripts/env.log"
 
-sudo dd if=/dev/urandom of=/root/.rnd bs=256 count=1
-sudo dd if=/dev/urandom of=/home/vagrant/.rnd bs=256 count=1
+fuction cleanLogs {
+  sudo rm -rf  $COMAMND_LOG
+  sudo rm -rf $COMMAND_AND_OUTPUT_LOG
+  sudo rm -rf $ENV_LOG
+}
 
-echo "Setting Timezone & Locale to $3 & en_US.UTF-8"
+function runLog {
+  cmd="$*"
+  sudo echo $cmd >> $COMMAND_LOG
+  sudo echo $cmd
+  sudo echo $cmd >> $COMMAND_AND_OUTPUT_LOG
+  sudo exec $cmd >> $COMMAND_AND_OUTPUT_LOG
+}
 
-sudo ln -sf /usr/share/zoneinfo/$3 /etc/localtime
-sudo apt-get install -qq language-pack-en
-sudo locale-gen en_US
-sudo update-locale LANG=en_US.UTF-8 LC_CTYPE=en_US.UTF-8
+function envLog {
+   theenv="$*"
+   sudo echo export $theenv >> $ENV_LOG
+   export $theenv
+}
 
-echo ">>> Installing Base Packages"
+envLog DEBIAN_FRONTEND=noninteractive
+
+runLog sudo dd if=/dev/urandom of=/root/.rnd bs=256 count=1 | tee -a "$COMMAND_LOG"
+runLog sudo dd if=/dev/urandom of=/home/vagrant/.rnd bs=256 count=1 | tee -a "$COMMAND_LOG"
+
+echo "Setting Timezone & Locale to $3 & en_US.UTF-8" | tee -a "$COMMAND_LOG"
+
+sudo ln -sf /usr/share/zoneinfo/$3 /etc/localtime | tee -a "$COMMAND_LOG"
+sudo apt-get install -qq language-pack-en | tee -a "$COMMAND_LOG"
+sudo locale-gen en_US | tee -a "$COMMAND_LOG"
+sudo update-locale LANG=en_US.UTF-8 LC_CTYPE=en_US.UTF-8 | tee -a "$COMMAND_LOG"
+
+echo ">>> Installing Base Packages" | tee -a "$COMMAND_LOG"
 
 if [[ -z $1 ]]; then
     github_url="https://raw.githubusercontent.com/mikaelmattsson/Vaprobash/master"
@@ -20,21 +44,27 @@ else
     github_url="$1"
 fi
 
+echo $github_url >> /scripts/.env
+
 # Update
-sudo apt-get update
+sudo apt-get update | tee -a "$COMMAND_LOG"
 
 # Install base packages
 # -qq implies -y --force-yes
-sudo apt-get install -qq curl unzip git-core ack-grep software-properties-common build-essential cachefilesd
-sudo apt-get install -qq ruby-full gcc g++ make libsqlite3-dev
+sudo apt-get install -qq curl unzip git-core ack-grep software-properties-common build-essential cachefilesd | tee -a "$COMMAND_LOG"
+sudo apt-get install -qq ruby-full gcc g++ make libsqlite3-dev | tee -a "$COMMAND_LOG"
 
 SSL_DIR="/etc/ssl/xip.io"
 DOMAIN="*.xip.io"
 PASSPHRASE="vaprobash"
+EMAIL="support@xip.io"
 
 echo ">>> Installing $DOMAIN self-signed SSL"
 
-EMAIL="support@xip.io"
+echo "export EMAIL=$EMAIL" >> /scripts/.env
+echo "export DOMAIN=$DOMAIN" >> /scripts/.env
+echo "export PASSPHRASE=$PASSPHRASE" >> /scripts/.env
+echo "export SSL_DIR=$SSL_DIR" >> /scripts/.env
 
 sudo mkdir -p "$SSL_DIR"
 
