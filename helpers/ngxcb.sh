@@ -195,7 +195,6 @@ cat <<EOF
        # }
     # }
 EOF
-}
 
 # Check if there are enough arguments provided (2 arguments and there 2 values)
 if [[ $# -lt 4 ]]; then
