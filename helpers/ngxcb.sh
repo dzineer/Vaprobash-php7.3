@@ -48,15 +48,10 @@ read -d '' PHP_NO_SSL <<EOF
         # Note: \.php$ is susceptible to file upload attacks
         # Consider using: "location ~ ^/(index|app|app_dev|config)\.php(/|$) {"
         location ~ \.php$ {
-            try_files \$uri =404;
-            fastcgi_split_path_info ^(.+\.php)(/.+)$;
-            # With php7.0-fpm:
-            fastcgi_pass 127.0.0.1:9000;
-            fastcgi_index index.php;
-            include fastcgi_params;
-            fastcgi_param SCRIPT_FILENAME \$document_root\$fastcgi_script_name;
-            fastcgi_param LARA_ENV local; # Environment variable for Laravel
-            fastcgi_param HTTPS off;
+          fastcgi_pass unix:/var/run/php/php7.3-fpm.sock;
+          fastcgi_index index.php;
+          include fastcgi_params;
+  	  fastcgi_param  SCRIPT_FILENAME  $document_root$fastcgi_script_name;	
         }
 EOF
 
@@ -66,15 +61,10 @@ read -d '' PHP_WITH_SSL <<EOF
         # Note: \.php$ is susceptible to file upload attacks
         # Consider using: "location ~ ^/(index|app|app_dev|config)\.php(/|$) {"
         location ~ \.php$ {
-            try_files \$uri =404;
-            fastcgi_split_path_info ^(.+\.php)(/.+)$;
-            # With php7.0-fpm:
-            fastcgi_pass 127.0.0.1:9000;
-            fastcgi_index index.php;
-            include fastcgi_params;
-            fastcgi_param SCRIPT_FILENAME \$document_root\$fastcgi_script_name;
-            fastcgi_param LARA_ENV local; # Environment variable for Laravel
-            fastcgi_param HTTPS on;
+          fastcgi_pass unix:/var/run/php/php7.3-fpm.sock;
+          fastcgi_index index.php;
+          include fastcgi_params;
+   	  fastcgi_param  SCRIPT_FILENAME  $document_root$fastcgi_script_name;
         }
 EOF
     fi
@@ -118,6 +108,7 @@ EOF
 
 # Main Nginx Server Block Config
 cat <<EOF
+
     server {
         listen 80;
 
@@ -131,17 +122,28 @@ cat <<EOF
         error_log  /var/log/nginx/vagrant.com-error.log error;
 
         charset utf-8;
+	client_max_body_size 100M;
 
-        location / {
-            try_files \$uri \$uri/ /app.php?\$query_string /index.php?\$query_string;
-        }
+        add_header X-Frame-Options "SAMEORIGIN";
+        add_header X-XSS-Protection "1; mode=block";
+        add_header X-Content-Type-Options "nosniff";
+
+	location / {
+           try_files $uri $uri/ /index.php?$query_string;
+    	}
+
 
         location = /favicon.ico { log_not_found off; access_log off; }
         location = /robots.txt  { access_log off; log_not_found off; }
 
         error_page 404 /index.php;
 
-        $PHP_NO_SSL
+        location ~ \.php$ {
+          fastcgi_pass unix:/var/run/php/php7.3-fpm.sock;
+          fastcgi_index index.php;
+          include fastcgi_params;
+	  fastcgi_param  SCRIPT_FILENAME  $document_root$fastcgi_script_name;
+        }
 
         # Deny .htaccess file access
         location ~ /\.ht {
@@ -149,40 +151,49 @@ cat <<EOF
         }
     }
 
-    server {
-        listen 443;
+   # server {
+   #     listen 443;
+   #
+   #     ssl on;
+   #     ssl_certificate     /etc/ssl/xip.io/xip.io.crt;
+   #     ssl_certificate_key /etc/ssl/xip.io/xip.io.key;
 
-        ssl on;
-        ssl_certificate     /etc/ssl/xip.io/xip.io.crt;
-        ssl_certificate_key /etc/ssl/xip.io/xip.io.key;
-
-        root $DocumentRoot;
-        index index.html index.htm index.php app.php app_dev.php;
+    #    root $DocumentRoot;
+    #    index index.html index.htm index.php app.php app_dev.php;
 
         # Make site accessible from ...
-        server_name $ServerName;
+    #    server_name $ServerName;
 
-        access_log /var/log/nginx/vagrant.com-access.log;
-        error_log  /var/log/nginx/vagrant.com-error.log error;
+     #   access_log /var/log/nginx/vagrant.com-access.log;
+     #   error_log  /var/log/nginx/vagrant.com-error.log error;
 
-        charset utf-8;
+     #   charset utf-8;
 
-        location / {
-            try_files \$uri \$uri/ /app.php?\$query_string /index.php?\$query_string;
-        }
+      #  location / {
+      #      try_files $uri $uri/ /app.php?$query_string /index.php?$query_string;
+      #  }
 
-        location = /favicon.ico { log_not_found off; access_log off; }
-        location = /robots.txt  { access_log off; log_not_found off; }
+      #  location = /favicon.ico { log_not_found off; access_log off; }
+      #  location = /robots.txt  { access_log off; log_not_found off; }
 
-        error_page 404 /index.php;
+      #  error_page 404 /index.php;
 
-        $PHP_WITH_SSL
+        # pass the PHP scripts to php7.0-fpm
+        # Note: .php$ is susceptible to file upload attacks
+        # Consider using: "location ~ ^/(index|app|app_dev|config).php(/|$) {"
+      #  location ~ .php$ {
+      #      fastcgi_pass unix:/var/run/php/php7.3-fpm.sock;
+      #      fastcgi_index index.php;
+      #      include fastcgi_params;
+      #	     fastcgi_param  SCRIPT_FILENAME  $document_root$fastcgi_script_name;
+      #      fastcgi_param LARA_ENV local; # Environment variable for Laravel
+      #  }
 
         # Deny .htaccess file access
-        location ~ /\.ht {
-            deny all;
-        }
-    }
+       # location ~ /\.ht {
+       #     deny all;
+       # }
+    # }
 EOF
 }
 
