@@ -10,9 +10,12 @@ PHP_IS_INSTALLED=$1
 apache2 -v > /dev/null 2>&1
 APACHE_IS_INSTALLED=$?
 
+# Test if Nginx is installed
+nginx -v > /dev/null 2>&1
+NGINX_IS_INSTALLED=$?
+
 # Installing dependency
 # -qq implies -y --force-yes
-sudo apt-get install -qq libsqlite3-dev ruby2.5 ruby2.5-dev
 
 if $(which rvm) -v > /dev/null 2>&1; then
 	echo ">>>>Installing with RVM"
@@ -50,4 +53,8 @@ fi
 
 if [[ $APACHE_IS_INSTALLED -eq 0 ]]; then
 	sudo service apache2 restart
+fi
+
+if [[ $NGINX_IS_INSTALLED -eq 0 ]]; then
+	sudo service nginx restart
 fi

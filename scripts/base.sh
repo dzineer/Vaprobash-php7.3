@@ -26,6 +26,7 @@ sudo apt-get update
 # Install base packages
 # -qq implies -y --force-yes
 sudo apt-get install -qq curl unzip git-core ack-grep software-properties-common build-essential cachefilesd
+sudo apt-get install -qq ruby-full gcc g++ make libsqlite3-dev
 
 SSL_DIR="/etc/ssl/xip.io"
 DOMAIN="*.xip.io"
