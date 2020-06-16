@@ -2,6 +2,8 @@
 
 **Va**&#x200B;grant **Pro**&#x200B;visioning **Bash** Scripts
 
+[This Readme](https://github.com/dzineer/Vaprobash-php7.3/master/readme.md)
+
 [View the site and extended docs.](http://fideloper.github.io/Vaprobash/index.html)
 
 [![Build Status](https://travis-ci.org/fideloper/Vaprobash.png?branch=master)](https://travis-ci.org/fideloper/Vaprobash)
@@ -13,8 +15,9 @@ The goal of this project is to create easy to use bash scripts in order to provi
 1. This targets Ubuntu LTS releases, currently 18.04.*
 2. This project will give users various popular options such as LAMP, LEMP
 3. This project will attempt some modularity. For example, users might choose to install a Vim setup, or not.
+4. This project is the extension of the original Vaprobash-php. This one is Vabprobash-php7.3
 
-Some further assumptions and self-imposed restrictions. If you find yourself needing or wanting the following, then other provisioning tool would better suited ([Chef](http://www.getchef.com), [Puppet](http://puppetlabs.com), [Ansible](http://www.ansibleworks.com)).
+It is best if you understand some vagrant usage.
 
 * If other OSes need to be used (CentOS, Redhat, Arch, etc).
 * If dependency management becomes complex. For example, installing Laravel depends on Composer. Setting a document root for a project will change depending on Nginx or Apache. Currently, these dependencies are accounted for, but more advanced dependencies will likely not be.
@@ -23,7 +26,7 @@ Some further assumptions and self-imposed restrictions. If you find yourself nee
 
 * Vagrant `1.5.0`+
     * Use `vagrant -v` to check your version
-* Vitualbox or VMWare Fusion
+* Vitualbox or VMWare Fusion - You need a license for both VMWare Fusion and for VMWare Vagrant, two seperate licenses.
 
 ## Instructions
 
@@ -31,10 +34,10 @@ Some further assumptions and self-imposed restrictions. If you find yourself nee
 
 ```bash
 # curl
-$ curl -L https://raw.githubusercontent.com/mikaelmattsson/Vaprobash-php7.0/master/Vagrantfile > Vagrantfile
+$ curl -L https://raw.githubusercontent.com/dzineer/Vaprobash-php7.3/master/Vagrantfile > Vagrantfile
 
 # wget
-$ wget -O Vagrantfile https://raw.githubusercontent.com/mikaelmattsson/Vaprobash-php7.0/master/Vagrantfile
+$ wget -O Vagrantfile https://raw.githubusercontent.com/dzineer/Vaprobash-php7.3/master/Vagrantfile
 ```
 
 **Second**, edit the `Vagrantfile` and uncomment which scripts you'd like to run. You can uncomment them by removing the `#` character before the `config.vm.provision` line.
@@ -46,30 +49,16 @@ $ wget -O Vagrantfile https://raw.githubusercontent.com/mikaelmattsson/Vaprobash
 ```bash
 $ vagrant up
 ```
-
-**Screencast**
-
-Here's a quickstart screencast!
-
-[<img src="https://secure-b.vimeocdn.com/ts/463/341/463341369_960.jpg" alt="Vaprobash Quickstart" style="max-width:100%"/>](http://vimeo.com/fideloper/vaprobash-quickstart)
-
-> <strong>Windows Users:</strong>
->
-> By default, NFS won't work on Windows. I suggest deleting the NFS block so Vagrant defaults back to its default file sync behavior.
->
-> However, you can also try the "vagrant-winnfsd" plugin. Just run `vagrant plugin install vagrant-winnfsd` to try it out!
->
-> Vagrant version 1.5 will have [more file sharing options](https://www.vagrantup.com/blog/feature-preview-vagrant-1-5-rsync.html) to explore as well!
-
 ## Docs
 
-[View the site and extended docs.](http://fideloper.github.io/Vaprobash/index.html)
+[View the site and extended docs.](https://github.com/dzineer/Vaprobash-php7.3)
 
 ## What You Can Install
 
 * Base Packages
 	* Base Items (Git and more!)
-	* PHP (php-fpm)
+	* Git
+	* PHP (php-fpm) 7.3
 	* Vim
 	* PHP MsSQL (ability to connect to SQL Server)
 	* Screen
@@ -135,6 +124,23 @@ The vagrant file does three things you should take note of:
 Change your IP address as needed. The default IP address is now `192.168.22.10`
 
 ![sequel pro vaprobash](http://fideloper.github.io/Vaprobash/img/sequel_pro.png)
+
+## Completing laravel install:
+- Connect to vm
+```
+vagrant ssh
+```
+- Create laravel database
+```
+mysql -u$user -p$password -e "create database laravel"
+```
+- Migrate database
+```
+php /vagrant/laravel/artisan migrate
+```
+```
+vagrant up 
+```
 
 ## Contribute!
 
