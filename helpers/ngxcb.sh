@@ -44,10 +44,10 @@ function create_server_block {
 
 # Nginx Server Block config for PHP (without using SSL)
 read -d '' PHP_NO_SSL <<EOF
-        # pass the PHP scripts to php7.0-fpm
-        # Note: \.php$ is susceptible to file upload attacks
-        # Consider using: "location ~ ^/(index|app|app_dev|config)\.php(/|$) {"
-        location ~ \.php$ {
+        # pass the PHP scripts to php7.3-fpm
+        # Note: \.php\$ is susceptible to file upload attacks
+        # Consider using: "location ~ ^/(index|app|app_dev|config)\.php(/|\$) {"
+        location ~ \.php\$ {
           fastcgi_pass unix:/var/run/php/php7.3-fpm.sock;
           fastcgi_index index.php;
           include fastcgi_params;
@@ -57,10 +57,10 @@ EOF
 
 # Nginx Server Block config for PHP (with SSL)
 read -d '' PHP_WITH_SSL <<EOF
-        # pass the PHP scripts to php7.0-fpm
-        # Note: \.php$ is susceptible to file upload attacks
-        # Consider using: "location ~ ^/(index|app|app_dev|config)\.php(/|$) {"
-        location ~ \.php$ {
+        # pass the PHP scripts to php7.3-fpm
+        # Note: \.php\$ is susceptible to file upload attacks
+        # Consider using: "location ~ ^/(index|app|app_dev|config)\.php(/|\$) {"
+        location ~ \.php\$ {
           fastcgi_pass unix:/var/run/php/php7.3-fpm.sock;
           fastcgi_index index.php;
           include fastcgi_params;
@@ -74,10 +74,10 @@ EOF
 # Nginx Server Block config for HHVM (without using SSL)
 read -d '' PHP_NO_SSL <<EOF
         # pass the PHP scripts to php7.3-fpm
-        location ~ \.(hh|php)$ {
+        location ~ \.(hh|php)\$ {
             try_files \$uri =404;
             fastcgi_keep_conn on;
-            fastcgi_split_path_info ^(.+\.php)(/.+)$;
+            fastcgi_split_path_info ^(.+\.php)(/.+)\$;
             # With HHVM:
             fastcgi_pass 127.0.0.1:9000;
             fastcgi_index index.php;
@@ -91,10 +91,10 @@ EOF
 # Nginx Server Block config for HHVM (with SSL)
 read -d '' PHP_WITH_SSL <<EOF
         # pass the PHP scripts to php7.3-fpm
-        location ~ \.(hh|php)$ {
+        location ~ \.(hh|php)\$ {
             try_files \$uri =404;
             fastcgi_keep_conn on;
-            fastcgi_split_path_info ^(.+\.php)(/.+)$;
+            fastcgi_split_path_info ^(.+\.php)(/.+)\$;
             # With HHVM:
             fastcgi_pass 127.0.0.1:9000;
             fastcgi_index index.php;
@@ -129,7 +129,7 @@ cat <<EOF
         add_header X-Content-Type-Options "nosniff";
 
 	location / {
-           try_files $uri $uri/ /index.php?$query_string;
+           try_files \$uri \$uri/ /index.php?\$query_string;
     	}
 
 
@@ -138,11 +138,11 @@ cat <<EOF
 
         error_page 404 /index.php;
 
-        location ~ \.php$ {
+        location ~ \.php\$ {
           fastcgi_pass unix:/var/run/php/php7.3-fpm.sock;
           fastcgi_index index.php;
           include fastcgi_params;
-	  fastcgi_param  SCRIPT_FILENAME  $document_root$fastcgi_script_name;
+	  fastcgi_param  SCRIPT_FILENAME  \$document_root\$fastcgi_script_name;
         }
 
         # Deny .htaccess file access
@@ -170,7 +170,7 @@ cat <<EOF
      #   charset utf-8;
 
       #  location / {
-      #      try_files $uri $uri/ /app.php?$query_string /index.php?$query_string;
+      #      try_files \$uri \$uri/ /app.php?\$query_string /index.php?\$query_string;
       #  }
 
       #  location = /favicon.ico { log_not_found off; access_log off; }
@@ -178,14 +178,14 @@ cat <<EOF
 
       #  error_page 404 /index.php;
 
-        # pass the PHP scripts to php7.0-fpm
-        # Note: .php$ is susceptible to file upload attacks
-        # Consider using: "location ~ ^/(index|app|app_dev|config).php(/|$) {"
-      #  location ~ .php$ {
+        # pass the PHP scripts to php7.3-fpm
+        # Note: .php\$ is susceptible to file upload attacks
+        # Consider using: "location ~ ^/(index|app|app_dev|config).php(/|\$) {"
+      #  location ~ .php\$ {
       #      fastcgi_pass unix:/var/run/php/php7.3-fpm.sock;
       #      fastcgi_index index.php;
       #      include fastcgi_params;
-      #	     fastcgi_param  SCRIPT_FILENAME  $document_root$fastcgi_script_name;
+      #	     fastcgi_param  SCRIPT_FILENAME  \$document_root\$fastcgi_script_name;
       #      fastcgi_param LARA_ENV local; # Environment variable for Laravel
       #  }
 
