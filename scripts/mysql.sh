@@ -48,7 +48,7 @@ if [ $3 == "true" ]; then
     read DATABASE
 
     $MYSQL -uroot -p$1 -e "$SQL"
-    $MYSQL -uroot -p$1 -e "CREATE $DATABASE IF NOT EXISTS patio DEFAULT CHARACTER SET utf8 DEFAULT COLLATE utf8_general_ci;"
+    $MYSQL -uroot -p$1 -e "CREATE DATABASE IF NOT EXISTS $4 DEFAULT CHARACTER SET utf8 DEFAULT COLLATE utf8_general_ci;
 
     service mysql restart
 fi

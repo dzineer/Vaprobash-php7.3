@@ -33,6 +33,7 @@ server_swap           = "768" # Options: false | int (MB) - Guideline: Between o
 server_timezone  = "UTC"
 
 # Database Configuration
+mysql_user = "root"   # We'll assume user "root"
 mysql_root_password   = "root"   # We'll assume user "root"
 mysql_version         = "5.5"    # Options: 5.5 | 5.6
 mysql_enable_remote   = "false"  # remote access enabled when true
@@ -231,8 +232,16 @@ Vagrant.configure("2") do |config|
   # Databases
   ##########
 
+  print "Enter the database to create: "
+  database_name = STDIN.gets.chomp
+  print "\n"
+
+  print "database name: #{database_name}\n"
+  print "database user: #{mysql_user}\n"
+  print "database password: #{mysql_root_password}\n"
+
   # Provision MySQL
-  config.vm.provision "shell", path: "#{github_url}/scripts/mysql.sh", args: [mysql_root_password, mysql_version, mysql_enable_remote]
+  config.vm.provision "shell", path: "#{github_url}/scripts/mysql.sh", args: [mysql_root_password, mysql_version, mysql_enable_remote, database_name]
 
   # Provision PostgreSQL
   # config.vm.provision "shell", path: "#{github_url}/scripts/pgsql.sh", args: pgsql_root_password
@@ -337,7 +346,7 @@ Vagrant.configure("2") do |config|
   config.vm.provision "shell", path: "#{github_url}/scripts/composer.sh", privileged: false, args: [github_pat, composer_packages.join(" ")]
 
   # Provision Laravel
-  config.vm.provision "shell", path: "#{github_url}/scripts/laravel.sh", privileged: false, args: [server_ip, laravel_root_folder, public_folder, laravel_version]
+  config.vm.provision "shell", path: "#{github_url}/scripts/laravel.sh", privileged: false, args: [server_ip, laravel_root_folder, public_folder, laravel_version, database_name, mysql_root_password]
 
   # Provision Symfony
   # config.vm.provision "shell", path: "#{github_url}/scripts/symfony.sh", privileged: false, args: [server_ip, symfony_root_folder, public_folder]
