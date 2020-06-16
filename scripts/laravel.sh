@@ -85,6 +85,10 @@ if [[ $APACHE_IS_INSTALLED -eq 0 ]]; then
     # Change <Directory ...> path
     sudo sed -i "s@$3@$laravel_public_folder@" /etc/apache2/sites-available/$1.xip.io.conf
 
+    echo "Database name to use with Laravel: "
+    read DB_DATABASE
+
+    sudo sed -i "s/DB_DATABASE=laravel/DB_DATABASE=$DB_DATABASE/" "$laravel_root_folder/.env"
 
     sudo service apache2 reload
 fi
